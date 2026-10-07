@@ -26,7 +26,7 @@ For a new environment, use Python 3.12 and install `requirements.txt`. This setu
 
 ## Docker
 
-See [Docker guide](docker.md) for a self-contained image and automatic GPU/CPU launcher. The container includes the current models and catalog. Inference defaults to `FASHION_DEVICE=auto`; use `python -m fashion_atlas --device cpu` to force CPU outside Docker. `/api/health` reports the active device.
+See [Docker guide](docker.md) for a self-contained image and one-line Docker launch. The container includes the current models and catalog. Inference defaults to `FASHION_DEVICE=auto`; use `python -m fashion_atlas --device cpu` to force CPU outside Docker. `/api/health` reports the active device.
 
 ## Retrain
 

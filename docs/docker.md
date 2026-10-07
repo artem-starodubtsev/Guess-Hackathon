@@ -1,54 +1,35 @@
-# Run Fashion Atlas in Docker
+# Docker
 
-Use Docker Desktop with Linux containers (or Docker Engine on Linux). Run commands from the project folder. The image includes trained models, catalog photos and previews; no API key or runtime model downloads are needed. This packages inference, not a new training run.
+Use Docker Desktop with Linux containers or Docker Engine on Linux.
 
-## Windows: automatic GPU / CPU
-
-```powershell
-cd D:\Fashion-Retrieval-MVP
-powershell -ExecutionPolicy Bypass -File .\start-docker.ps1
-```
-
-Open http://127.0.0.1:8767. The launcher rebuilds the image using the Docker cache, checks whether Docker can actually use CUDA, then enables GPU access or starts on CPU. Ctrl+C stops and removes its container. If your existing local server occupies the port, use `-Port 8768`. Add `-Cpu` to skip the GPU probe.
-
-## Direct commands (Windows or Linux)
-
-CPU, including on a computer without NVIDIA hardware:
+## Start
 
 ```sh
-docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas:latest
+docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
-GPU, when the host driver and Docker GPU support are configured:
+Open http://localhost:8767. Ctrl+C stops and removes the container. Use `8768:8767` instead to change the host port.
+
+## Build
+
+From the project folder, with the local catalog and model files present:
 
 ```sh
-docker run --rm --init --gpus all -p 127.0.0.1:8767:8767 fashion-atlas:latest
+docker build -t fashion-atlas .
 ```
 
-The application defaults to `FASHION_DEVICE=auto`: use available CUDA, otherwise CPU. `-e FASHION_DEVICE=cpu` forces CPU. Docker must expose the GPU with `--gpus all`; the application cannot grant itself hardware access. A direct Docker command with `--gpus all` can fail before Python starts on a host without GPU support; use the launcher for automatic fallback at that level.
+Rebuild after changing code, models or catalog. The image includes everything needed for inference; no API key, downloads or host data mounts are needed when running it. GitHub contains the code only: supply `data/`, `pretrained/`, `artifacts/` and `cache/images.npz` before building.
 
-Device and readiness: http://127.0.0.1:8767/api/health. Both text search and uploaded-image search use the selected device. Palette extraction and image preprocessing remain on CPU. CPU inference preserves the models and descriptors, but takes longer.
-
-## Smaller CPU-only image
+## GPU (optional)
 
 ```sh
-docker build --build-arg TORCH_FLAVOR=cpu -t fashion-atlas:cpu .
-docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas:cpu
+docker run --rm --init --gpus all -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
-The default CUDA-capable image also runs on CPU, but includes larger CUDA dependencies. Build for an x86-64 target; other architectures have not been validated.
+The default command works on CPU. With `--gpus all`, Docker exposes the NVIDIA GPU and the application automatically uses CUDA when available. If Docker has no GPU support, omit that flag: Docker can reject it before the application starts. `-e FASHION_DEVICE=cpu` forces CPU. Check the active device at http://localhost:8767/api/health.
 
-## Move to another computer
+For a smaller CPU-only image: `docker build --build-arg TORCH_FLAVOR=cpu -t fashion-atlas .`.
 
-```sh
-docker save -o fashion-atlas.tar fashion-atlas:latest
-```
+## Another computer
 
-Copy the archive to the other computer, then:
-
-```sh
-docker load -i fashion-atlas.tar
-docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas:latest
-```
-
-Copy `start-docker.ps1` too if you want the Windows automatic GPU probe. No training cache beyond image previews, virtual environment, annotations, API credentials or server logs are included. Rebuild after changing source, models or catalog. The container writes no uploaded photos to disk. Host port is bound to localhost for this local demo.
+Export with `docker save -o fashion-atlas.tar fashion-atlas`, copy the archive, then import with `docker load -i fashion-atlas.tar`. Start with the same one-line command above. Validated on x86-64.

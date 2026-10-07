@@ -4,19 +4,18 @@ Search the GUESS catalog by text or photo. Adjust **color, pattern and shape** p
 
 ## Run
 
-Start Docker Desktop with Linux containers. From this folder, run:
+Start Docker Desktop with Linux containers, then launch the prepared image:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start-docker.ps1
+```sh
+docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
-Open **http://localhost:8767**. The launcher builds the image and uses GPU when available, otherwise CPU. Press Ctrl+C to stop. Use `-Cpu` to force CPU or `-Port 8768` to change the port.
+Open **http://localhost:8767**. Press Ctrl+C to stop. This command runs on CPU; add `--gpus all` to use an NVIDIA GPU supported by Docker.
 
-On Linux, or to start directly on CPU:
+Build the image once from the project folder (and rebuild after changes):
 
 ```sh
 docker build -t fashion-atlas .
-docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
 **Data required:** the GitHub repository contains code, not catalog photos or model weights. Before building, copy the prepared `data/`, `pretrained/`, `artifacts/` and `cache/images.npz` from the local project. No API key is needed. [Docker details](docs/docker.md).
