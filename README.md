@@ -1,6 +1,21 @@
 # GUESS Hackathon
 
-Search the GUESS catalog by text or photo. Adjust **color, pattern and shape** priorities, find matching pieces, or explore the interactive cluster map.
+A visual fashion search prototype built around a simple idea: people often know what they like when they see it, but catalog categories and keywords do not fully describe that preference. Let users search with a photo or a few words, then decide whether color, pattern or shape matters most.
+
+## How it works
+
+The pipeline turns product images and user requests into comparable **visual signatures**, then searches the GUESS catalog using adjustable priorities.
+
+1. **Extract three attributes.** Each garment gets a palette vector (16 values), a pattern vector (64) and a shape vector (64). Palette extraction captures dominant colors and their proportions. A frozen DINOv2 Small model with a trained projection represents fabric patterns. A CNN silhouette encoder with a metadata-trained projection represents shape and garment type.
+2. **Represent the catalog and the request.** The three blocks form a 144-value descriptor stored with each product. An uploaded photo goes through the same image pipeline. A fine-tuned FashionCLIP text encoder maps written requests into these attribute spaces and predicts initial search weights.
+3. **Let users control similarity.** The search engine combines attribute distances using the Color, Pattern and Shape sliders. Set a weight to zero to ignore that attribute, or increase it to give it more importance relative to the others. For example, keep the floral pattern while exploring other colors, or prioritize a similar silhouette. Multiple photo views are grouped into product results.
+4. **Explore the collection.** An interactive catalog map shows visual neighborhoods for individual attributes or their combinations. It offers another way to discover products and inspect visual families, with potential uses for analytics, merchandising and fashion design teams. Neighbors are ranked in the original attribute spaces, not by their positions on the 2D map.
+
+The prototype also supports finding a matching piece within a chosen category, such as trousers for an uploaded blouse, using palette and pattern similarity. This is visual matching, not a learned outfit-compatibility score. Specific visual descriptions work best; broad occasion-based requests are still limited.
+
+**Future extension:** use prompts, clicks and feedback to learn preferred attribute weights over time. This preference-learning loop is not implemented in the current prototype.
+
+![Architecture overview: palette, pattern and shape extraction, text alignment, and weighted search](docs/images/architecture.png)
 
 ## Run
 
@@ -19,12 +34,6 @@ docker build -t fashion-atlas .
 ```
 
 **Data required:** the GitHub repository contains code, not catalog photos or model weights. Before building, copy the prepared `data/`, `pretrained/`, `artifacts/` and `cache/images.npz` from the local project. No API key is needed. [Docker details](docs/docker.md).
-
-## How it works
-
-Each item has three visual signatures: palette (16 values), pattern (64) and shape (64). A text encoder maps requests into the same spaces. Search combines their distances using your slider weights; zero ignores an attribute.
-
-![Architecture overview: palette, pattern and shape extraction, text alignment, and weighted search](docs/images/architecture.png)
 
 ## Files
 
