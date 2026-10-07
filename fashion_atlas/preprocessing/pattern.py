@@ -3,7 +3,7 @@
 from __future__ import annotations
 import cv2
 import numpy as np
-from segmentation import _garment_mask
+from fashion_atlas.preprocessing.segmentation import _garment_mask
 
 __all__ = ["extract_pattern"]
 

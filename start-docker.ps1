@@ -7,11 +7,8 @@ $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 docker info --format '{{.OSType}}'
 if ($LASTEXITCODE -ne 0) { throw 'Start Docker Desktop with Linux containers first.' }
-docker image inspect fashion-atlas:latest *> $null
-if ($LASTEXITCODE -ne 0) {
-    docker build -t fashion-atlas:latest .
-    if ($LASTEXITCODE -ne 0) { throw 'Docker build failed.' }
-}
+docker build -t fashion-atlas:latest .
+if ($LASTEXITCODE -ne 0) { throw 'Docker build failed.' }
 
 $gpuOptions = @()
 if (-not $Cpu) {

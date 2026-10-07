@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from common import PRETRAINED
+from fashion_atlas.common import PRETRAINED
 
 
 class ShapeAutoencoder(nn.Module):

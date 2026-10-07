@@ -1,7 +1,12 @@
 import argparse
 import subprocess
 import sys
-from common import ROOT, ARTIFACTS
+from fashion_atlas.common import ROOT, ARTIFACTS
+
+MODULES = {stage: f"fashion_atlas.training.{stage}" for stage in (
+    "prepare", "train_shape", "train_pattern", "train_text", "evaluate"
+)}
+MODULES["catalog"] = "fashion_atlas.catalog"
 
 STAGES = (
     "prepare",
@@ -19,14 +24,14 @@ def main(start="prepare"):
         print(f"\nRunning {stage}...", flush=True)
         with (ARTIFACTS / f"{stage}.log").open("w", encoding="utf-8") as log:
             result = subprocess.run(
-                [sys.executable, "-u", str(ROOT / f"{stage}.py")],
+                [sys.executable, "-u", "-m", MODULES[stage]],
                 cwd=ROOT,
                 stdout=log,
                 stderr=subprocess.STDOUT,
             )
         if result.returncode:
             raise SystemExit(f"{stage} failed. See artifacts/{stage}.log")
-    print("Done. Run python app.py to open the search demo.")
+    print("Done. Run python -m fashion_atlas to open the search demo.")
 
 
 if __name__ == "__main__":

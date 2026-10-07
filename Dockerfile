@@ -10,7 +10,7 @@ RUN python -m pip install --no-cache-dir torch==2.11.0 --index-url https://downl
     && sed '/^--/d; /^torch==/d' /tmp/requirements.txt > /tmp/runtime.txt \
     && python -m pip install --no-cache-dir -r /tmp/runtime.txt
 
-COPY *.py ./
+COPY fashion_atlas/ fashion_atlas/
 COPY web/ web/
 COPY pretrained/ pretrained/
 COPY artifacts/*.pt artifacts/catalog.json artifacts/report.html artifacts/
@@ -23,4 +23,4 @@ USER appuser
 EXPOSE 8767
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8767/api/health', timeout=4)"
-CMD ["python", "app.py", "--host", "0.0.0.0", "--port", "8767"]
+CMD ["python", "-m", "fashion_atlas", "--host", "0.0.0.0", "--port", "8767"]

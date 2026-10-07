@@ -6,11 +6,10 @@ Use Docker Desktop with Linux containers (or Docker Engine on Linux). Run comman
 
 ```powershell
 cd D:\Fashion-Retrieval-MVP
-docker build -t fashion-atlas:latest .
 powershell -ExecutionPolicy Bypass -File .\start-docker.ps1
 ```
 
-Open http://127.0.0.1:8767. The launcher checks whether Docker can actually use CUDA, then enables GPU access or starts on CPU. Ctrl+C stops and removes its container. If your existing local server occupies the port, use `-Port 8768`. Add `-Cpu` to skip the GPU probe.
+Open http://127.0.0.1:8767. The launcher rebuilds the image using the Docker cache, checks whether Docker can actually use CUDA, then enables GPU access or starts on CPU. Ctrl+C stops and removes its container. If your existing local server occupies the port, use `-Port 8768`. Add `-Cpu` to skip the GPU probe.
 
 ## Direct commands (Windows or Linux)
 

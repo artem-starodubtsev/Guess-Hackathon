@@ -8,11 +8,11 @@ import time
 import cv2
 import numpy as np
 
-from common import DATA, CACHE, read_json, record_metrics
-from segmentation import _garment_mask
-from shape import extract_shape
-from pattern import extract_pattern, three_crops
-from palette import extract_palette
+from fashion_atlas.common import DATA, CACHE, read_json, record_metrics
+from fashion_atlas.preprocessing.segmentation import _garment_mask
+from fashion_atlas.preprocessing.shape import extract_shape
+from fashion_atlas.preprocessing.pattern import extract_pattern, three_crops
+from fashion_atlas.preprocessing.palette import extract_palette
 
 
 def preprocess_item(item):

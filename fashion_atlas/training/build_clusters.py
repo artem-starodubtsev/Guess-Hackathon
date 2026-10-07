@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from umap import UMAP
 
-from common import ROOT, ARTIFACTS, read_json, write_json
+from fashion_atlas.common import ROOT, ARTIFACTS, read_json, write_json
 
 
 def main():

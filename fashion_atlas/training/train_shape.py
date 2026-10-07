@@ -5,9 +5,9 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from common import DATA, CACHE, ARTIFACTS, read_json, record_metrics
-from models import ShapeAutoencoder
-from training import setup, metadata_retrieval, supervised_contrastive
+from fashion_atlas.common import DATA, CACHE, ARTIFACTS, read_json, record_metrics
+from fashion_atlas.models import ShapeAutoencoder
+from fashion_atlas.training.utils import setup, metadata_retrieval, supervised_contrastive
 
 
 @torch.inference_mode()

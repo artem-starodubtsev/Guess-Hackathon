@@ -13,10 +13,10 @@ import numpy as np
 import torch
 from PIL import Image, ImageOps, UnidentifiedImageError
 
-from common import ROOT, DATA, CACHE, ARTIFACTS, read_json
-from catalog import distances
-from search import TextEncoder, ImageEncoder
-from device import select_device
+from fashion_atlas.common import ROOT, DATA, CACHE, ARTIFACTS, read_json
+from fashion_atlas.catalog import distances
+from fashion_atlas.search import TextEncoder, ImageEncoder
+from fashion_atlas.device import select_device
 
 MAX_UPLOAD_BYTES = 12 * 1024 * 1024
 MAX_IMAGE_PIXELS = 20_000_000
@@ -110,7 +110,7 @@ class Handler(SimpleHTTPRequestHandler):
             if report.exists():
                 self.respond(report.read_bytes(), "text/html; charset=utf-8")
             else:
-                self.send_error(404, "Run evaluate.py to build the report")
+                self.send_error(404, "Run python -m fashion_atlas.training.evaluate to build the report")
         elif path.startswith(("/images/", "/patterns/", "/masks/")):
             try:
                 _, kind, filename = path.split("/")
@@ -239,9 +239,13 @@ def main(port=8767, host="127.0.0.1", device=None):
         server.server_close()
 
 
-if __name__ == "__main__":
+def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8767)
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--device", default=None, help="auto, cpu or cuda[:index]; defaults to FASHION_DEVICE or auto")
     main(**vars(parser.parse_args()))
+
+
+if __name__ == "__main__":
+    cli()

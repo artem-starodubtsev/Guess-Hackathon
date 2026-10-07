@@ -6,10 +6,10 @@ import cv2
 import numpy as np
 import torch
 
-from common import DATA, CACHE, ARTIFACTS, read_json, write_json, record_metrics
-from catalog import distances
-from search import TextEncoder, rank
-from models import ShapeAutoencoder
+from fashion_atlas.common import DATA, CACHE, ARTIFACTS, read_json, write_json, record_metrics
+from fashion_atlas.catalog import distances
+from fashion_atlas.search import TextEncoder, rank
+from fashion_atlas.models import ShapeAutoencoder
 
 
 def image_url(item):

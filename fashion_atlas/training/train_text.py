@@ -8,9 +8,9 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from common import DATA, CACHE, ARTIFACTS, read_json, record_metrics
-from models import TextHeads, load_text_backbone, text_features
-from training import setup
+from fashion_atlas.common import DATA, CACHE, ARTIFACTS, read_json, record_metrics
+from fashion_atlas.models import TextHeads, load_text_backbone, text_features
+from fashion_atlas.training.utils import setup
 
 
 def training_rows(items):

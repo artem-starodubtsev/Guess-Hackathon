@@ -3,9 +3,9 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from common import DATA, CACHE, ARTIFACTS, read_json, record_metrics, product_key
-from models import PatternProjection, load_dino, dino_features
-from training import setup, unit
+from fashion_atlas.common import DATA, CACHE, ARTIFACTS, read_json, record_metrics, product_key
+from fashion_atlas.models import PatternProjection, load_dino, dino_features
+from fashion_atlas.training.utils import setup, unit
 
 
 def crop_retrieval(features, products):

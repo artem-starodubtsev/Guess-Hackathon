@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from common import DATA, CACHE, ARTIFACTS, read_json, write_json, record_metrics
+from fashion_atlas.common import DATA, CACHE, ARTIFACTS, read_json, write_json, record_metrics
 
 
 def palette_signature(vector):
