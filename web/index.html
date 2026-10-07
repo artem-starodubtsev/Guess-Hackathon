@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fashion Atlas · Attribute Search</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="clusters.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <span class="brand">FASHION ATLAS</span
+        ><span class="tag">Attribute search / local collection</span>
+      </div>
+      <nav class="atlas-nav" aria-label="Main navigation"><a href="/" aria-current="page">Search</a><a href="clusters.html">Clusters</a></nav>
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">THREE ATTRIBUTES. YOUR POINT OF VIEW.</p>
+          <h1>Find the resemblance.</h1>
+          <p>
+            Choose a piece. Decide what matters. Explore its nearest neighbors.
+          </p>
+        </div>
+        <button id="browse">Browse collection ↗</button>
+      </section>
+      <section class="panel image-search">
+        <div class="mode-switch" role="group" aria-label="Search mode">
+          <button id="similarMode" aria-pressed="true">
+            Find similar clothes
+          </button>
+          <button id="matchMode" aria-pressed="false">
+            Find a matching piece
+          </button>
+        </div>
+        <p id="modeHelp" class="muted">
+          Search by an uploaded photo, a catalog reference or an English
+          description.
+        </p>
+        <form id="imageSearchForm" class="upload-row">
+          <div>
+            <label for="imageFile">Upload a garment photo</label>
+            <input
+              id="imageFile"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              required
+            />
+          </div>
+          <button id="uploadButton" type="submit">Use photo →</button>
+        </form>
+        <p id="uploadState" class="muted" aria-live="polite">
+          One garment on a white background · JPEG, PNG or WebP · up to 12 MB.
+          Photos stay local and are not saved.
+        </p>
+        <div id="categoryControls" hidden>
+          <label for="targetCategory">Find this type of clothing</label>
+          <select id="targetCategory"></select>
+          <p class="muted">
+            Match the reference's colors and print within this category. Shape
+            is fixed by your category choice, so silhouette similarity is off.
+          </p>
+        </div>
+      </section>
+      <section id="textPanel" class="panel text-search">
+        <form id="textSearchForm">
+          <label for="textQuery"><strong>Search with words</strong></label>
+          <div class="text-row">
+            <input
+              id="textQuery"
+              maxlength="500"
+              placeholder="e.g. black and white striped top"
+              autocomplete="off"
+              required
+            /><button id="textSubmit" type="submit">Search →</button>
+          </div>
+        </form>
+        <p>
+          <label for="textModel">Text model </label
+          ><select id="textModel">
+            <option value="unfrozen">Fine-tuned · last 2 blocks</option>
+            <option value="original">Baseline · frozen encoder</option>
+          </select>
+          ·
+          <a href="report.html" target="_blank"
+            >Training report and examples ↗</a
+          >
+        </p>
+        <p id="textState" class="muted" aria-live="polite">
+          English queries · predicted attribute emphasis · adjust the sliders
+          after searching
+        </p>
+        <button id="resetPredicted" class="small" hidden>
+          Restore predicted weights
+        </button>
+      </section>
+      <div class="layout">
+        <aside>
+          <div class="panel">
+            <div class="section-head">
+              <h2>Reference piece</h2>
+              <button id="random" class="small">↻ Random</button>
+            </div>
+            <img id="queryImage" class="reference" alt="Selected clothing" />
+            <h3 id="queryTitle"></h3>
+            <p id="queryMeta" class="muted"></p>
+            <div class="previews">
+              <div>
+                <span>Palette · 16D</span>
+                <div id="paletteBar"></div>
+              </div>
+              <div>
+                <span>Pattern · 3 crops</span
+                ><img
+                  id="patternPreview"
+                  alt="Three extracted grayscale fabric regions"
+                />
+              </div>
+              <div>
+                <span>Shape · 64D</span
+                ><img id="shapePreview" alt="Binary clothing silhouette" />
+              </div>
+            </div>
+          </div>
+          <div class="panel controls">
+            <h2>What matters?</h2>
+            <p class="muted">
+              0 ignores an attribute. 1 gives it maximum emphasis.
+            </p>
+            <div id="sliders"></div>
+            <div class="presets">
+              <button data-preset="1,1,1">Balanced</button
+              ><button data-preset="1,0,0">Palette only</button
+              ><button data-preset="0,1,0">Pattern only</button
+              ><button data-preset="0,0,1">Shape only</button>
+            </div>
+            <label class="check"
+              ><input id="groupViews" type="checkbox" checked /> One result per
+              product · group photo views</label
+            ><label class="check"
+              ><input id="exclude" type="checkbox" checked /> Hide other views
+              of the same product</label
+            >
+            <details>
+              <summary>How the search works</summary>
+              <p>
+                One 144D descriptor, three independently compared blocks.
+                Pattern combines three fabric regions through a learned DINO
+                projection. Shape uses a metadata-trained projection of the CNN
+                embedding; metadata is not used to rerank results. Palette uses
+                color transport in Lab; pattern and shape use cosine distance.
+                Fixed distance scales make the weights comparable.
+              </p>
+              <p>
+                Photo views with the same style and color are grouped. The
+                best-matching view supplies the product score and thumbnail;
+                different colors remain separate. The final distance is their
+                weighted average. Lower is closer. Sliders express relative
+                emphasis, not a minimum similarity requirement. Ties within
+                quantized 0.000001 distance buckets use a stable item order.
+              </p>
+            </details>
+          </div>
+        </aside>
+        <section>
+          <div class="result-head">
+            <div>
+              <h2>
+                <span id="resultHeading">Nearest neighbors</span>
+                <span id="resultCount"></span>
+              </h2>
+              <p id="status" class="muted" aria-live="polite"></p>
+            </div>
+            <span class="distance-label">DISTANCE ↓</span>
+          </div>
+          <div id="results" class="grid"></div>
+        </section>
+      </div>
+      <footer>
+        Local image + text search · <span id="catalogCount"></span> items ·
+        DINO: 3 fabric regions · Learned shape metric · Text inference runs on
+        this computer
+      </footer>
+    </main>
+    <dialog id="catalogDialog">
+      <div class="section-head">
+        <h2>Choose a reference</h2>
+        <button id="closeDialog" aria-label="Close catalog">✕</button>
+      </div>
+      <input
+        id="catalogSearch"
+        type="search"
+        placeholder="Search product code, color or category…"
+        aria-label="Search catalog"
+      />
+      <p id="browseCount" class="muted"></p>
+      <div id="catalogGrid" class="catalog-grid"></div>
+    </dialog>
+    <dialog id="pieceDialog">
+      <div class="section-head">
+        <h2 id="pieceTitle"></h2>
+        <button id="closePiece" aria-label="Close item preview">✕</button>
+      </div>
+      <p id="pieceMeta" class="muted"></p>
+      <img id="pieceImage" alt="Selected catalog item" />
+    </dialog>
+    <script src="data.js"></script>
+    <script src="metric.js"></script>
+    <script src="app.js"></script>
+    <script src="text.js"></script>
+    <script src="upload.js"></script>
+  </body>
+</html>

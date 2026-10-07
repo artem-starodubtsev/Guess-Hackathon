@@ -1,0 +1,8 @@
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0+cu128
+numpy==2.5.3
+opencv-python-headless==5.0.0.93
+Pillow==12.3.0
+transformers==4.57.6
+huggingface-hub==0.36.2
+safetensors==0.8.0

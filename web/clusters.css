@@ -1,0 +1,21 @@
+.atlas-nav {display:flex;gap:8px;align-items:center}
+.atlas-nav a {color:#cad6e5;text-decoration:none;padding:9px 16px;border-radius:20px}
+.atlas-nav a[aria-current="page"] {background:#eef3fb;color:#172438;font-weight:700}
+.cluster-controls {display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.attribute-switches {display:flex;gap:12px;flex-wrap:wrap}
+.attribute-switches label {background:#f1f3f8;border:1px solid #d8e0ed;border-radius:20px;padding:10px 15px;cursor:pointer}
+.attribute-switches input {accent-color:#4764a6}
+.cluster-layout {display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
+.map-panel {min-width:0}
+#mapFrame {height:590px;width:100%;position:relative;margin-top:12px}
+#clusterCanvas {width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;border-radius:12px;background:#fafbfe}
+#clusterReference {width:100%;height:190px;object-fit:contain;background:white;margin-top:12px}
+#clusterTitle {overflow-wrap:anywhere}
+#clusterNeighbors {display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cluster-neighbor {padding:8px;text-align:left;min-width:0;white-space:normal;background:#fafbfe}
+.cluster-neighbor img {display:block;width:100%;height:112px;object-fit:contain;background:white}
+.cluster-neighbor span {display:block;font-size:11px;margin-top:6px;overflow-wrap:anywhere}
+.cluster-neighbor strong {display:block;font-size:11px;margin-top:5px;color:#4764a6}
+#mapLegend {display:flex;flex-wrap:wrap;gap:8px 16px;font-size:10px;color:#677587}
+#mapLegend i {display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+@media(max-width:900px){.cluster-layout{grid-template-columns:1fr}.cluster-inspector{width:100%}#mapFrame{height:440px}.tag{display:none}}

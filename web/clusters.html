@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fashion Atlas · Clusters</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="clusters.css"></head>
+<body>
+<header><div><span class="brand">FASHION ATLAS</span><span class="tag">Explore the collection</span></div><nav class="atlas-nav" aria-label="Main navigation"><a href="/">Search</a><a href="clusters.html" aria-current="page">Clusters</a></nav></header>
+<main>
+<section class="intro"><div><p class="eyebrow">SEVEN VIEWS. ONE COLLECTION.</p><h1>Explore the neighborhoods.</h1><p>Choose the attributes that define similarity.</p></div></section>
+<section class="panel cluster-controls"><div class="attribute-switches" role="group" aria-label="Map attributes"><label><input type="checkbox" value="1" checked> Palette</label><label><input type="checkbox" value="2" checked> Pattern</label><label><input type="checkbox" value="4" checked> Shape</label></div><div><button id="resetMap">Reset view</button> <button id="randomPoint">Random item</button></div></section>
+<p id="mapStatus" class="muted" aria-live="polite">Loading seven UMAP maps…</p>
+<div class="cluster-layout"><section class="panel map-panel"><div class="section-head"><h2 id="mapTitle">Palette + Pattern + Shape</h2><span class="muted">UMAP · 2D</span></div><div id="mapFrame"><canvas id="clusterCanvas" tabindex="0" aria-label="Interactive UMAP map. Hover to inspect, click to pin, drag to pan and scroll to zoom. Use Random item to inspect without a pointer."></canvas></div><p class="muted">Hover to inspect · Click to pin/unpin · Scroll to zoom · Drag to pan</p><p class="muted">Colors indicate catalog categories, not computed cluster labels. UMAP is an approximate visualization; neighbors use original attribute distances.</p><div id="mapLegend"></div></section>
+<aside class="panel cluster-inspector"><div class="section-head"><h2>Selected item</h2><button id="unpinPoint" class="small" hidden>Unpin</button></div><img id="clusterReference" alt="Selected garment"><h3 id="clusterTitle"></h3><p id="clusterMeta" class="muted"></p><h2>Nearest neighbors</h2><p id="neighborExplanation" class="muted"></p><div id="clusterNeighbors"></div></aside></div>
+</main><script src="clusters.js"></script></body></html>
