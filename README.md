@@ -24,6 +24,8 @@ docker build -t fashion-atlas .
 
 Each item has three visual signatures: palette (16 values), pattern (64) and shape (64). A text encoder maps requests into the same spaces. Search combines their distances using your slider weights; zero ignores an attribute.
 
+![Architecture overview: palette, pattern and shape extraction, text alignment, and weighted search](docs/images/architecture.png)
+
 ## Files
 
 - `fashion_atlas/` — server, models and search.
@@ -33,3 +35,7 @@ Each item has three visual signatures: palette (16 values), pattern (64) and sha
 - `docs/` — [development and training](docs/development.md).
 
 Local launch: `python -m fashion_atlas` (after installing `requirements.txt`).
+
+## Disclaimer
+
+The original idea and product concept were developed by our team. Generative AI tools assisted with rapid coding, testing, prototyping and subsequent refinement, including documentation and visuals.
