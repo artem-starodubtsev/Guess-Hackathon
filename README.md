@@ -12,21 +12,16 @@ Users adjust three sliders to decide what matters most: keep a favorite pattern 
 
 ## Run
 
-Start Docker Desktop with Linux containers, then launch the prepared image:
-
-```sh
-docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas
-```
-
-Open **http://localhost:8767**. Press Ctrl+C to stop. This command runs on CPU; add `--gpus all` to use an NVIDIA GPU supported by Docker.
-
-Build the image once from the project folder (and rebuild after changes):
+Clone this repository and start Docker Desktop with Linux containers. From the project folder:
 
 ```sh
 docker build -t fashion-atlas .
+docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
-**Data required:** the GitHub repository contains code, not catalog photos or model weights. Before building, copy the prepared `data/`, `pretrained/`, `artifacts/` and `cache/images.npz` from the local project. No API key is needed. [Docker details](docs/docker.md).
+Open **http://localhost:8767**. The first build automatically downloads the catalog and trained models from [GitHub Releases](https://github.com/artem-starodubtsev/Guess-Hackathon/releases/tag/demo-assets-v1) and verifies their SHA-256 checksum. No manual file copying, API key or training is needed. Later starts only need the `docker run` command. Press Ctrl+C to stop.
+
+The default run uses CPU; add `--gpus all` to use an NVIDIA GPU supported by Docker. [Docker details](docs/docker.md).
 
 ## Files
 
@@ -34,9 +29,10 @@ docker build -t fashion-atlas .
 - `fashion_atlas/preprocessing/` — image, palette and silhouette processing.
 - `fashion_atlas/training/` — preparation, training and evaluation.
 - `web/` — interface and cluster maps.
+- `scripts/download_assets.py` — download the demo catalog and model weights.
 - `docs/` — [development and training](docs/development.md).
 
-Local launch: `python -m fashion_atlas` (after installing `requirements.txt`).
+Without Docker: install `requirements.txt`, run `python scripts/download_assets.py`, then `python -m fashion_atlas`.
 
 ## Disclaimer
 

@@ -22,7 +22,7 @@ The existing `.venv` and local weights are ready on this machine:
 
 Open http://127.0.0.1:8767. The page lets you compare frozen FashionCLIP with the version fine-tuned on its last two transformer blocks. Both have separately trained attribute heads.
 
-For a new environment, use Python 3.12 and install `requirements.txt`. This setup uses PyTorch with CUDA 12.8 on an RTX 5090; training requires CUDA. Inference can also run on CPU. The photographs, annotations and pretrained weights must be supplied separately; `.gitignore` keeps them out of the code repository.
+For a new environment, use Python 3.12 and install `requirements.txt`. This setup uses PyTorch with CUDA 12.8 on an RTX 5090; training requires CUDA. Inference can also run on CPU. For inference, run `python scripts/download_assets.py` to obtain the catalog and weights from GitHub Releases. Full retraining requires the original training manifests and annotations separately; `.gitignore` keeps these assets out of Git history.
 
 ## Docker
 
@@ -99,4 +99,4 @@ Open the **Clusters** tab in the header. Seven precomputed UMAP maps cover every
 
 Neighbors are ranked by the original normalized attribute distances with equal weights for the enabled attributes, never by 2D coordinates. Other views of the query product are excluded, and neighbors are grouped by style + color. Switching maps preserves the selected item and changes both the projection and its neighbor list.
 
-The static map data ships in the Docker image; UMAP is not required for serving. After rebuilding the catalog, regenerate the maps with `python -m pip install umap-learn==0.5.9.post2` and `python -m fashion_atlas.training.build_clusters`, then rebuild Docker. The map includes every catalog photo view.
+The static map data ships in the Docker image; UMAP is not required for serving. Docker uses the versioned runtime bundle in runtime-assets.json rather than local data/model folders. To deploy a retrained catalog, publish a new bundle, update its URL and SHA-256 in that manifest, and regenerate the maps. After rebuilding the catalog, regenerate the maps with `python -m pip install umap-learn==0.5.9.post2` and `python -m fashion_atlas.training.build_clusters`, then rebuild Docker. The map includes every catalog photo view.

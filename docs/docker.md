@@ -1,24 +1,21 @@
 # Docker
 
-Use Docker Desktop with Linux containers or Docker Engine on Linux.
+Use Docker Desktop with Linux containers or Docker Engine on Linux (x86-64).
 
-## Start
+## Build and start
 
 ```sh
+git clone https://github.com/artem-starodubtsev/Guess-Hackathon.git
+cd Guess-Hackathon
+docker build -t fashion-atlas .
 docker run --rm --init -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
-Open http://localhost:8767. Ctrl+C stops and removes the container. Use `8768:8767` instead to change the host port.
+Open http://localhost:8767. Ctrl+C stops and removes the container. Change the first port to use another host port, for example `127.0.0.1:8768:8767`.
 
-## Build
+The build downloads a versioned runtime bundle from GitHub Releases and verifies the SHA-256 hash in `runtime-assets.json`. It includes catalog photos, descriptors, previews, trained heads, DINOv2 Small and the FashionCLIP text encoder. The download is cached by Docker. No access token, API key or local data folder is required. Startup and search work offline after building.
 
-From the project folder, with the local catalog and model files present:
-
-```sh
-docker build -t fashion-atlas .
-```
-
-Rebuild after changing code, models or catalog. The image includes everything needed for inference; no API key, downloads or host data mounts are needed when running it. GitHub contains the code only: supply `data/`, `pretrained/`, `artifacts/` and `cache/images.npz` before building.
+The bundle is for inference, not full retraining: synthetic training queries, source spreadsheets, training logs and disposable training caches are not included. Pretrained model licenses and source references are preserved under `pretrained/` in the bundle. Product images remain GUESS imagery.
 
 ## GPU (optional)
 
@@ -26,10 +23,17 @@ Rebuild after changing code, models or catalog. The image includes everything ne
 docker run --rm --init --gpus all -p 127.0.0.1:8767:8767 fashion-atlas
 ```
 
-The default command works on CPU. With `--gpus all`, Docker exposes the NVIDIA GPU and the application automatically uses CUDA when available. If Docker has no GPU support, omit that flag: Docker can reject it before the application starts. `-e FASHION_DEVICE=cpu` forces CPU. Check the active device at http://localhost:8767/api/health.
+Without GPU exposure the application selects CPU. With `--gpus all`, it uses CUDA when available. If Docker has no GPU support, omit the flag; Docker may reject it before Python starts. Force CPU with `-e FASHION_DEVICE=cpu`. Check http://localhost:8767/api/health for the active device.
 
-For a smaller CPU-only image: `docker build --build-arg TORCH_FLAVOR=cpu -t fashion-atlas .`.
+For a smaller CPU-only image, build with `docker build --build-arg TORCH_FLAVOR=cpu -t fashion-atlas .`.
 
-## Another computer
+## Local Python
 
-Export with `docker save -o fashion-atlas.tar fashion-atlas`, copy the archive, then import with `docker load -i fashion-atlas.tar`. Start with the same one-line command above. Validated on x86-64.
+Install `requirements.txt` in a Python 3.12 environment, then run:
+
+```sh
+python scripts/download_assets.py
+python -m fashion_atlas
+```
+
+The downloader restores the pinned demo files into the project folder, replacing files with the same names. Save any custom-trained models first. Full retraining additionally requires the original training manifests and annotations described in [development.md](development.md).

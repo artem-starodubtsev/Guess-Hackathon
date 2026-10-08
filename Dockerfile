@@ -1,3 +1,9 @@
+FROM python:3.12-slim AS assets
+WORKDIR /bundle
+COPY scripts/download_assets.py scripts/download_assets.py
+COPY runtime-assets.json ./
+RUN python scripts/download_assets.py --destination /assets
+
 FROM python:3.12-slim
 
 ARG TORCH_FLAVOR=cu128
@@ -12,11 +18,7 @@ RUN python -m pip install --no-cache-dir torch==2.11.0 --index-url https://downl
 
 COPY fashion_atlas/ fashion_atlas/
 COPY web/ web/
-COPY pretrained/ pretrained/
-COPY artifacts/*.pt artifacts/catalog.json artifacts/report.html artifacts/
-COPY cache/images.npz cache/images.npz
-COPY data/trainval/ data/trainval/
-COPY data/test/ data/test/
+COPY --from=assets /assets/ ./
 
 RUN useradd --uid 10001 --create-home appuser
 USER appuser
